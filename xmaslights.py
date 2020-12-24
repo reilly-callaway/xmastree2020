@@ -1,27 +1,32 @@
-def xmaslight():
-    # This is the code from my 
-    
-    #NOTE THE LEDS ARE GRB COLOUR (NOT RGB)
-    
-    # Here are the libraries I am currently using:
-    import time
-    import board
-    import neopixel
-    import re
-    import math
-    
-    # You are welcome to add any of these:
-    # import random
-    # import numpy
-    # import scipy
-    # import sys
-    
-    # If you want to have user changable values, they need to be entered from the command line
-    # so import sys sys and use sys.argv[0] etc
-    # some_value = int(sys.argv[0])
-    
+################################################################################
+# file: xmaslights.py
+# authors: Matt Parker, Reilly Callaway
+# forked from: https://github.com/standupmaths/xmastree2020
+# date: 24-DEC-2020
+################################################################################
+
+
+#NOTE THE LEDS ARE GRB COLOUR (NOT RGB)
+
+# Here are the libraries I am currently using:
+import time
+import board
+import neopixel
+import re
+import math
+
+# You are welcome to add any of these:
+# import random
+# import numpy
+# import scipy
+# import sys
+
+# If you want to have user changable values, they need to be entered from the command line
+# so import sys sys and use sys.argv[0] etc
+# some_value = int(sys.argv[0])
+
+def import_coords():
     # IMPORT THE COORDINATES (please don't break this bit)
-    
     coordfilename = "Python/coords.txt"
 	
     fin = open(coordfilename,'r')
@@ -36,15 +41,12 @@ def xmaslight():
         for i in slab:
             new_coord.append(int(re.sub(r'[^-\d]','', i)))
         coords.append(new_coord)
-    
-    #set up the pixels (AKA 'LEDs')
-    PIXEL_COUNT = len(coords) # this should be 500
-    
-    pixels = neopixel.NeoPixel(board.D18, PIXEL_COUNT, auto_write=False)
-    
-    
-    # YOU CAN EDIT FROM HERE DOWN
-    
+
+    return coords
+
+
+
+def spin_effect(pixels, coords):
     # I get a list of the heights which is not overly useful here other than to set the max and min altitudes
     heights = []
     for i in coords:
@@ -88,8 +90,8 @@ def xmaslight():
     c = 100 
     
     # yes, I just run which run is true
-    run = 1
-    while run == 1:
+    run = True
+    while run:
         
         time.sleep(slow)
         
@@ -139,6 +141,10 @@ def xmaslight():
         
     return 'DONE'
 
+coords = import_coords()
 
-# yes, I just put this at the bottom so it auto runs
-xmaslight()
+#set up the pixels (AKA 'LEDs')
+PIXEL_COUNT = len(coords) # this should be 500
+pixels = neopixel.NeoPixel(board.D18, PIXEL_COUNT, auto_write=False)
+
+spin_effect(pixels, coords)
